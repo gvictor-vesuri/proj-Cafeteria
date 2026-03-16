@@ -16,6 +16,7 @@ const PRODUCTS = [
     desc: "Extraído curto, intenso e bem balanceado.",
     price: 8.9,
     category: "cafe",
+    ingredients: ["Café 100% arábica", "Água filtrada"],
     img: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Espresso_coffee.jpg/500px-Espresso_coffee.jpg",
   },
   {
@@ -24,6 +25,7 @@ const PRODUCTS = [
     desc: "Espresso, leite vaporizado e canela.",
     price: 14.9,
     category: "cafe",
+    ingredients: ["Espresso", "Leite vaporizado", "Canela"],
     img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Cappuccino_in_cafe_shop.jpg/960px-Cappuccino_in_cafe_shop.jpg",
   },
   {
@@ -32,6 +34,7 @@ const PRODUCTS = [
     desc: "Avelãs suaves, café e leite cremoso.",
     price: 15.9,
     category: "cafe",
+    ingredients: ["Espresso", "Leite vaporizado", "Xarope de avelã"],
     img: "https://upload.wikimedia.org/wikipedia/commons/d/d0/Latte_coffee.jpg",
   },
   {
@@ -41,6 +44,7 @@ const PRODUCTS = [
     price: 16.9,
     category: "cafe",
     featured: true,
+    ingredients: ["Espresso duplo", "Chocolate amargo", "Leite vaporizado", "Canela"],
     img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Cappuccino_in_cafe_shop.jpg/960px-Cappuccino_in_cafe_shop.jpg",
   },
   {
@@ -49,6 +53,7 @@ const PRODUCTS = [
     desc: "Infusão a frio. Doce, limpo e refrescante.",
     price: 13.9,
     category: "gelado",
+    ingredients: ["Café em infusão a frio", "Água filtrada", "Gelo"],
     img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Cold_brew_coffee.jpg/1280px-Cold_brew_coffee.jpg",
   },
   {
@@ -57,6 +62,7 @@ const PRODUCTS = [
     desc: "Cítrico e borbulhante. Perfeito no calor.",
     price: 17.9,
     category: "gelado",
+    ingredients: ["Espresso", "Água tônica", "Gelo", "Limão"],
     img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Iced_tea.jpg/1280px-Iced_tea.jpg",
   },
   {
@@ -66,6 +72,7 @@ const PRODUCTS = [
     price: 14.9,
     category: "doces",
     featured: true,
+    ingredients: ["Massa amanteigada", "Creme de limão", "Merengue"],
     img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Lemon_tart.jpg/1280px-Lemon_tart.jpg",
   },
   {
@@ -75,6 +82,7 @@ const PRODUCTS = [
     price: 16.9,
     category: "doces",
     featured: true,
+    ingredients: ["Cream cheese", "Baunilha", "Base de biscoito", "Calda do dia"],
     img: "https://upload.wikimedia.org/wikipedia/commons/4/44/Cheesecake.jpg",
   },
   {
@@ -84,6 +92,7 @@ const PRODUCTS = [
     price: 11.9,
     category: "doces",
     featured: true,
+    ingredients: ["Chocolate", "Cacau", "Manteiga", "Ovos", "Farinha"],
     img: "https://upload.wikimedia.org/wikipedia/commons/3/36/Chocolate_Brownie.jpg",
   },
   {
@@ -92,6 +101,7 @@ const PRODUCTS = [
     desc: "Chocolate meio amargo e sal marinho.",
     price: 9.9,
     category: "doces",
+    ingredients: ["Farinha", "Manteiga", "Chocolate meio amargo", "Açúcar mascavo", "Sal marinho"],
     img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Chocolate_chip_cookie.jpg/1280px-Chocolate_chip_cookie.jpg",
   },
   {
@@ -100,6 +110,7 @@ const PRODUCTS = [
     desc: "Quentinho e com queijo de verdade.",
     price: 7.9,
     category: "salgados",
+    ingredients: ["Polvilho", "Queijo", "Leite", "Ovos"],
     img: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/P%C3%A3o_de_Queijo.jpg/1280px-P%C3%A3o_de_Queijo.jpg",
   },
   {
@@ -108,6 +119,7 @@ const PRODUCTS = [
     desc: "Pão dourado, queijo derretendo.",
     price: 12.9,
     category: "salgados",
+    ingredients: ["Pão", "Queijo", "Presunto", "Manteiga"],
     img: "https://upload.wikimedia.org/wikipedia/commons/a/af/Grilled_cheese_sandwiches.jpg",
   },
   {
@@ -116,11 +128,13 @@ const PRODUCTS = [
     desc: "Gelado, leve e aromático.",
     price: 10.9,
     category: "cha",
+    ingredients: ["Chá mate", "Limão", "Gelo", "Açúcar (opcional)"],
     img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Iced_tea.jpg/1280px-Iced_tea.jpg",
   },
 ];
 
 const STORAGE_KEY = "cafeteria-aurora-cart-v1";
+const FAV_KEY = "cafeteria-aurora-favs-v1";
 
 function formatBRL(value) {
   return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -128,6 +142,51 @@ function formatBRL(value) {
 
 function byId(id) {
   return document.getElementById(id);
+}
+
+function loadFavs() {
+  try {
+    const raw = localStorage.getItem(FAV_KEY);
+    if (!raw) return new Set();
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return new Set();
+    return new Set(parsed.filter((x) => typeof x === "string"));
+  } catch {
+    return new Set();
+  }
+}
+
+function saveFavs() {
+  localStorage.setItem(FAV_KEY, JSON.stringify([...favs]));
+}
+
+function isFav(id) {
+  return favs.has(id);
+}
+
+function setFav(id, next) {
+  if (next) favs.add(id);
+  else favs.delete(id);
+  saveFavs();
+  syncFavUI(id);
+}
+
+function toggleFav(id) {
+  setFav(id, !isFav(id));
+}
+
+function syncFavUI(id) {
+  const pressed = isFav(id) ? "true" : "false";
+  document.querySelectorAll(`[data-fav="${id}"]`).forEach((btn) => {
+    if (btn instanceof HTMLElement) btn.setAttribute("aria-pressed", pressed);
+  });
+
+  if (modalProductId === id) {
+    const btn = document.querySelector("[data-fav-modal]");
+    if (btn instanceof HTMLElement) btn.setAttribute("aria-pressed", pressed);
+    const text = btn?.querySelector?.(".favText");
+    if (text) text.textContent = isFav(id) ? "Favoritado" : "Favoritar";
+  }
 }
 
 function toast(message) {
@@ -139,6 +198,125 @@ function toast(message) {
   toast._t = window.setTimeout(() => {
     el.hidden = true;
   }, 1800);
+}
+
+let revealObserver = null;
+
+function observeReveals(root = document) {
+  const els = root.querySelectorAll(".reveal");
+  if (!els.length) return;
+
+  // Prefer accessibility over motion.
+  if (window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches) {
+    els.forEach((el) => el.classList.add("is-visible"));
+    return;
+  }
+
+  if (!revealObserver) return;
+
+  els.forEach((el) => {
+    if (el.dataset.revealBound === "1") return;
+    el.dataset.revealBound = "1";
+    revealObserver.observe(el);
+  });
+}
+
+function initReveal() {
+  if (window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches) return;
+
+  document.body.classList.add("revealOn");
+  revealObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target;
+        el.classList.add("is-visible");
+        revealObserver?.unobserve(el);
+      });
+    },
+    { threshold: 0.14, rootMargin: "0px 0px -10% 0px" }
+  );
+
+  observeReveals(document);
+}
+
+let favs = loadFavs();
+let modalProductId = null;
+
+function pulseCart() {
+  const fab = document.querySelector(".cartFab");
+  if (!(fab instanceof HTMLElement)) return;
+  fab.classList.remove("pulse");
+  // Restart animation.
+  void fab.offsetWidth;
+  fab.classList.add("pulse");
+}
+
+function openProductModal(id) {
+  const modal = byId("productModal");
+  const scrim = byId("modalScrim");
+  if (!modal || !scrim) return;
+
+  const product = getProduct(id);
+  if (!product) return;
+
+  modalProductId = id;
+
+  const catLabel = CATEGORIES.find((c) => c.id === product.category)?.label || "Produto";
+  const title = byId("modalTitle");
+  const kicker = byId("modalKicker");
+  const price = byId("modalPrice");
+  const desc = byId("modalDesc");
+  const img = byId("modalImg");
+  const ing = byId("modalIngredients");
+  const favBtn = modal.querySelector("[data-fav-modal]");
+  const favText = modal.querySelector(".favText");
+  const addBtn = byId("modalAddBtn");
+
+  if (kicker) kicker.textContent = catLabel;
+  if (title) title.textContent = product.name;
+  if (price) price.textContent = formatBRL(product.price);
+  if (desc) desc.textContent = product.desc;
+  if (img) {
+    img.src = product.img;
+    img.alt = product.name;
+  }
+
+  if (ing) {
+    const list = Array.isArray(product.ingredients) && product.ingredients.length ? product.ingredients : ["Em breve."];
+    ing.innerHTML = list.map((x) => `<li>${x}</li>`).join("");
+  }
+
+  if (favBtn instanceof HTMLElement) favBtn.setAttribute("aria-pressed", isFav(id) ? "true" : "false");
+  if (favText instanceof HTMLElement) favText.textContent = isFav(id) ? "Favoritado" : "Favoritar";
+
+  if (addBtn) addBtn.onclick = () => {
+    addToCart(id, 1);
+    pulseCart();
+    addBtn.classList.remove("added");
+    void addBtn.offsetWidth;
+    addBtn.classList.add("added");
+    window.setTimeout(() => addBtn.classList.remove("added"), 600);
+  };
+
+  document.body.classList.add("modalOpen");
+  scrim.hidden = false;
+  modal.hidden = false;
+  modal.setAttribute("aria-hidden", "false");
+
+  const close = modal.querySelector("[data-close-modal]");
+  if (close instanceof HTMLElement) close.focus();
+}
+
+function closeProductModal() {
+  const modal = byId("productModal");
+  const scrim = byId("modalScrim");
+  if (!modal || !scrim) return;
+  modalProductId = null;
+  document.body.classList.remove("modalOpen");
+  scrim.hidden = true;
+  modal.hidden = true;
+  modal.setAttribute("aria-hidden", "true");
 }
 
 function loadCart() {
@@ -199,6 +377,18 @@ function clearCart() {
   renderCart();
   renderCartBadge();
   toast("Carrinho limpo");
+}
+
+function cancelOrder() {
+  if (cartCount() === 0) return;
+  const ok = window.confirm("Cancelar o pedido e limpar o carrinho?");
+  if (!ok) return;
+  cart = {};
+  saveCart(cart);
+  renderCart();
+  renderCartBadge();
+  closeCart();
+  toast("Pedido cancelado");
 }
 
 function renderCartBadge() {
@@ -319,9 +509,13 @@ function renderFeaturedDesserts() {
   );
 
   host.innerHTML = desserts
-    .map((p) => {
+    .map((p, i) => {
+      const pressed = isFav(p.id) ? "true" : "false";
       return `
-        <article class="featuredCard" aria-label="${p.name}">
+        <article class="featuredCard reveal" style="--reveal-delay: ${i * 50}ms" aria-label="${p.name}" data-product="${p.id}">
+          <button class="favBtn favBtnSmall" type="button" data-fav="${p.id}" aria-pressed="${pressed}" aria-label="Favoritar">
+            <span class="favIcon" aria-hidden="true">♥</span>
+          </button>
           <div class="featuredImg" aria-hidden="true">
             <img src="${p.img}" alt="" loading="lazy" />
           </div>
@@ -341,6 +535,8 @@ function renderFeaturedDesserts() {
       `;
     })
     .join("");
+
+  observeReveals(host);
 }
 
 function renderMenu() {
@@ -352,10 +548,14 @@ function renderMenu() {
   empty.hidden = items.length !== 0;
 
   grid.innerHTML = items
-    .map((p) => {
+    .map((p, i) => {
       const catLabel = CATEGORIES.find((c) => c.id === p.category)?.label || "";
+      const pressed = isFav(p.id) ? "true" : "false";
       return `
-        <article class="itemCard" aria-label="${p.name}">
+        <article class="itemCard reveal" style="--reveal-delay: ${i * 35}ms" aria-label="${p.name}" data-product="${p.id}">
+          <button class="favBtn favBtnSmall" type="button" data-fav="${p.id}" aria-pressed="${pressed}" aria-label="Favoritar">
+            <span class="favIcon" aria-hidden="true">♥</span>
+          </button>
           <div class="itemMedia" aria-hidden="true">
             <img src="${p.img}" alt="" loading="lazy" />
           </div>
@@ -374,6 +574,8 @@ function renderMenu() {
       `;
     })
     .join("");
+
+  observeReveals(grid);
 }
 
 function setCategory(id) {
@@ -426,9 +628,32 @@ function setupEvents() {
     const target = event.target;
     if (!(target instanceof HTMLElement)) return;
 
+    const favBtn = target.closest("[data-fav]");
+    if (favBtn instanceof HTMLElement) {
+      const id = favBtn.getAttribute("data-fav");
+      if (id) {
+        toggleFav(id);
+        toast(isFav(id) ? "Adicionado aos favoritos" : "Removido dos favoritos");
+      }
+      return;
+    }
+
+    if (target.matches("[data-fav-modal]") || target.closest("[data-fav-modal]")) {
+      if (modalProductId) {
+        toggleFav(modalProductId);
+        toast(isFav(modalProductId) ? "Adicionado aos favoritos" : "Removido dos favoritos");
+      }
+      return;
+    }
+
     const add = target.getAttribute("data-add");
     if (add) {
       addToCart(add, 1);
+      pulseCart();
+      target.classList.remove("added");
+      void target.offsetWidth;
+      target.classList.add("added");
+      window.setTimeout(() => target.classList.remove("added"), 600);
       return;
     }
 
@@ -456,6 +681,16 @@ function setupEvents() {
       return;
     }
 
+    if (target.matches("[data-cancel-order]") || target.closest("[data-cancel-order]")) {
+      cancelOrder();
+      return;
+    }
+
+    if (target.matches("[data-close-modal]") || target.closest("[data-close-modal]")) {
+      closeProductModal();
+      return;
+    }
+
     if (target.matches("[data-close-cart]") || target.closest("[data-close-cart]")) {
       closeCart();
       return;
@@ -464,6 +699,15 @@ function setupEvents() {
     const cat = target.getAttribute("data-cat");
     if (cat) {
       setCategory(cat);
+      return;
+    }
+
+    const card = target.closest("[data-product]");
+    if (card instanceof HTMLElement) {
+      // Ignore clicks on interactive elements.
+      if (target.closest("button, a, input, textarea, select")) return;
+      const id = card.getAttribute("data-product");
+      if (id) openProductModal(id);
     }
   });
 
@@ -473,8 +717,15 @@ function setupEvents() {
   const scrim = document.querySelector(".scrim");
   if (scrim) scrim.addEventListener("click", closeCart);
 
+  const modalScrim = byId("modalScrim");
+  if (modalScrim) modalScrim.addEventListener("click", closeProductModal);
+
   window.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") closeCart();
+    if (event.key !== "Escape") return;
+    const modal = byId("productModal");
+    const isModalOpen = modal && modal.hidden === false;
+    if (isModalOpen) closeProductModal();
+    else closeCart();
   });
 
   const search = byId("search");
@@ -505,16 +756,10 @@ function setupEvents() {
   }
 }
 
-function initWhatsLabel() {
-  const label = byId("whatsLabel");
-  if (!label) return;
-  label.textContent = WHATSAPP_NUMBER_E164 ? `+${WHATSAPP_NUMBER_E164}` : "(defina no script.js)";
-}
-
+initReveal();
 renderFilters();
 renderFeaturedDesserts();
 renderMenu();
 renderCart();
 renderCartBadge();
 setupEvents();
-initWhatsLabel();
