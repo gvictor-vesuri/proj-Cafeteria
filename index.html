@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cafeteria Aurora | Cardápio</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Manrope:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="theme-color" content="#120b07" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <a class="skipLink" href="#cardapio">Pular para o cardapio</a>
+
+    <header class="topbar">
+      <div class="topbarInner">
+        <div class="brand" aria-label="Cafeteria Aurora">
+          <span class="brandMark" aria-hidden="true"></span>
+          <div class="brandText">
+            <span class="brandName">Aurora</span>
+            <span class="brandTag">cafés artesanais</span>
+          </div>
+        </div>
+
+        <nav class="navLinks" aria-label="Navegacao">
+          <a href="#cardapio">Cardápio</a>
+          <a href="#sobre">Sobre</a>
+          <a href="#novidades">Novidades</a>
+        </nav>
+
+        <button class="cartFab" type="button" aria-controls="cartDrawer" aria-expanded="false">
+          Carrinho
+          <span class="cartCount" aria-label="Itens no carrinho">0</span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" aria-label="Apresentacao">
+        <div class="heroGrid">
+          <div class="heroCopy">
+            <p class="heroKicker">Feito na hora. Do jeito certo.</p>
+            <h1>Um cardápio pequeno, mas inesquecível.</h1>
+            <p class="heroLead">
+              Grãos selecionados, leite vaporizado com paciência e receitas que abraçam. Escolha seu café, adicione ao
+              carrinho e finalize o pedido.
+            </p>
+
+            <div class="heroActions">
+              <a class="btn btnPrimary" href="#cardapio">Ver cardapio</a>
+            </div>
+
+            <div class="heroMeta">
+              <div class="metaItem">
+                <span class="metaTitle">Horário</span>
+                <span class="metaValue">Seg a Sáb, 8h - 19h</span>
+              </div>
+              <div class="metaItem">
+                <span class="metaTitle">Retirada</span>
+                <span class="metaValue">15 a 25 min</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="heroCard" aria-label="Destaque do dia">
+            <div class="heroArt" aria-hidden="true">
+              <div class="cup">
+                <div class="steam s1"></div>
+                <div class="steam s2"></div>
+                <div class="steam s3"></div>
+              </div>
+            </div>
+            <div class="heroCardBody">
+              <p class="cardLabel">Destaque do dia</p>
+              <h2 class="cardTitle">Mocha da Casa</h2>
+              <p class="cardDesc">Chocolate amargo, espresso duplo e um toque de canela. Equilíbrio e conforto.</p>
+              <div class="cardRow">
+                <span class="priceTag">R$ 16,90</span>
+                <button class="miniAdd" type="button" data-add="mocha-casa">Adicionar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="cardapio" class="menu" aria-label="Cardápio">
+        <div class="sectionHead">
+          <h2>Cardápio</h2>
+          <p>Use a busca, filtre por categoria e monte seu pedido. Tudo fica salvo no seu navegador.</p>
+        </div>
+
+        <div class="featured" aria-label="Destaques de doces">
+          <div class="featuredHead">
+            <h3>Doces em destaque</h3>
+            <p class="muted">Os queridinhos da casa para acompanhar um café.</p>
+          </div>
+          <div class="featuredStrip" id="featuredStrip" aria-live="polite"></div>
+        </div>
+
+        <div class="menuTools">
+          <div class="searchWrap">
+            <label class="srOnly" for="search">Buscar item</label>
+            <input id="search" class="search" type="search" inputmode="search" placeholder="Buscar: latte, brownie..." />
+          </div>
+
+          <div class="filters" role="group" aria-label="Categorias"></div>
+        </div>
+
+        <div class="menuGrid" id="menuGrid" aria-live="polite"></div>
+
+        <p class="menuEmpty" hidden>Nenhum item encontrado. Tente outra busca.</p>
+      </section>
+
+      <section id="sobre" class="about" aria-label="Sobre">
+        <div class="aboutGrid">
+          <div class="aboutCard">
+            <h2>Sobre a Aurora</h2>
+            <p>
+              A Aurora nasceu de um ritual simples: moer, cheirar, extrair e dividir. Sem pressa, sem truques, só café
+              bem feito.
+            </p>
+          </div>
+
+          <div class="aboutCard aboutCardAlt">
+            <h3>Onde estamos</h3>
+            <p class="muted">Gotham Coffee District, 123</p>
+            <h3>Contato</h3>
+            <p class="muted">WhatsApp: <span class="mono" id="whatsLabel">(defina no script.js)</span></p>
+            <div class="aboutBadges" aria-label="Destaques">
+              <span class="badge">Grãos especiais</span>
+              <span class="badge">Opções veganas</span>
+              <span class="badge">Doces da casa</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="novidades" class="newsletter" aria-label="Novidades">
+        <div class="newsletterCard">
+          <div>
+            <h2>Novidades na sua caixa de entrada</h2>
+            <p class="muted">
+              Uma vez por semana: novos itens, descontos e curiosidades de preparo. Sem spam.
+            </p>
+          </div>
+
+          <form class="newsForm" id="newsForm">
+            <label class="srOnly" for="email">Seu email</label>
+            <input id="email" type="email" placeholder="seuemail@exemplo.com" required />
+            <button class="btn btnPrimary" type="submit">Quero receber</button>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p class="muted">Cafeteria Aurora.</p>
+    </footer>
+
+    <div class="checkoutBar" id="checkoutBar" hidden>
+      <div class="checkoutInner">
+        <div class="checkoutText">
+          <span class="checkoutLabel">Total</span>
+          <span class="checkoutTotal mono" id="checkoutTotal">R$ 0,00</span>
+        </div>
+        <button class="btn btnPrimary checkoutBtn" type="button" data-open-cart>
+          Finalizar
+        </button>
+      </div>
+    </div>
+
+    <div class="scrim" hidden></div>
+    <aside class="cartDrawer" id="cartDrawer" aria-label="Carrinho" aria-hidden="true">
+      <div class="cartHeader">
+        <div>
+          <h2>Seu pedido</h2>
+          <p class="muted" id="cartSub">0 itens</p>
+        </div>
+        <button class="iconBtn" type="button" data-close-cart aria-label="Fechar carrinho">Fechar</button>
+      </div>
+
+      <div class="cartItems" id="cartItems"></div>
+
+      <div class="cartFooter">
+        <div class="cartTotals">
+          <div class="totRow">
+            <span>Subtotal</span>
+            <span class="mono" id="cartSubtotal">R$ 0,00</span>
+          </div>
+          <div class="totRow totStrong">
+            <span>Total</span>
+            <span class="mono" id="cartTotal">R$ 0,00</span>
+          </div>
+        </div>
+
+        <div class="cartActions">
+          <button class="btn btnGhost" type="button" id="clearCart">Limpar</button>
+          <button class="btn btnPrimary" type="button" id="checkoutBtn">Finalizar</button>
+        </div>
+
+      </div>
+    </aside>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
+
+    <script src="script.js" defer></script>
+  </body>
+</html>
