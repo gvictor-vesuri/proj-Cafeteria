@@ -1,16 +1,17 @@
-Projeto Cafeteria ☕
+# ☕ Projeto Cafeteria
 
-Site desenvolvido com HTML, CSS e JavaScript.
+Site desenvolvido com HTML, CSS e JavaScript, com foco em interface moderna e responsiva.
 
-🔹 Funcionalidades:
+## 🚀 Funcionalidades
+- Layout responsivo
+- Menu de navegação
+- Seções de produtos
+- Interatividade com JavaScript
 
-Layout responsivo
-Menu de navegação
-Seções de produtos
-Interatividade com JavaScript
+## 🛠️ Tecnologias
+- HTML
+- CSS
+- JavaScript
 
-🔹 Tecnologias:
-
-HTML
-CSS
-JavaScript
+## 🔗 Acesse o projeto
+https://gvictor-vesuri.github.io/proj-Cafeteria/
